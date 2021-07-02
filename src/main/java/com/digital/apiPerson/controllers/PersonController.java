@@ -2,27 +2,25 @@ package com.digital.apiPerson.controllers;
 
 import com.digital.apiPerson.DTO.MessageResponseDTO;
 import com.digital.apiPerson.entities.Person;
-import com.digital.apiPerson.repository.PersonRepositorie;
+import com.digital.apiPerson.service.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/people")
 public class PersonController {
 
-    private PersonRepositorie personRepositorie;
+    private PersonService personService;
 
     @Autowired
-    public PersonController(PersonRepositorie personRepositorie) {
-        this.personRepositorie = personRepositorie;
+    public PersonController(PersonService personService) {
+        this.personService = personService;
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public MessageResponseDTO createPerson(@RequestBody  Person person) {
-        Person savedPerson =  personRepositorie.save(person);
-        return MessageResponseDTO.builder().message("Created person " + savedPerson.getId()).build();
+        return personService.createPerson(person);
     }
 }
